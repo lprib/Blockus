@@ -17,10 +17,11 @@ fun PApplet.doButton(
 ): Boolean {
     var isPressed = false
     pushStyle()
-    stroke(0f)
-    strokeWeight(2f)
+    noStroke()
+//    strokeWeight(2f)
     textSize(20f)
-    if (win.jaxforreal.blockus.isWithinRect(x, y, w, h, mouseX.toFloat(), mouseY.toFloat())) {
+    val isMouseHovered = win.jaxforreal.blockus.isWithinRect(x, y, w, h, mouseX.toFloat(), mouseY.toFloat())
+    if (isMouseHovered) {
         if (mousePressed) {
             fill(pressColor)
             isPressed = true
@@ -30,7 +31,12 @@ fun PApplet.doButton(
     } else {
         fill(normalColor)
     }
-    rect(x, y, w, h)
+    rect(
+            x - if (isMouseHovered) 8 else 0,
+            y - if (isMouseHovered) 8 else 0,
+            w + if (isMouseHovered) 16 else 0,
+            h + if (isMouseHovered) 16 else 0
+            )
     fill(0f)
     text(text, (x + w / 2) - textWidth(text) / 2, y + h / 2)
     popStyle()

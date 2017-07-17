@@ -1,6 +1,7 @@
 package win.jaxforreal.blockus.game
 
 import processing.event.MouseEvent
+import win.jaxforreal.blockus.Assets
 import win.jaxforreal.blockus.Screen
 import win.jaxforreal.blockus.ScreenManagerApplet
 
@@ -23,7 +24,7 @@ class GameScreen(val numPlayers: Int) : Screen {
     override fun hide() {}
 
     override fun draw(app: ScreenManagerApplet, delta: Float) = with(app) {
-        background(0f)
+        image(Assets.background, 0f, 0f, width.toFloat(), height.toFloat())
 
         //stretch board with window resize
         board.heightPixels = app.height - 140f
