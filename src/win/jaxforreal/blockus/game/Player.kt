@@ -8,10 +8,8 @@ enum class Player(val color: Int) {
     GREEN(Color.green.rgb),
     YELLOW(Color.yellow.rgb);
 
-    fun next() = when (this) {
-        RED -> BLUE
-        BLUE -> GREEN
-        GREEN -> YELLOW
-        YELLOW -> RED
+    fun next(numPlayers: Int): Player {
+        val nextIndex = values().indexOf(this) + 1
+        return if (nextIndex == numPlayers) values()[0] else values()[nextIndex]
     }
 }

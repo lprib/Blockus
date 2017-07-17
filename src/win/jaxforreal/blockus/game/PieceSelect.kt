@@ -28,15 +28,30 @@ class PieceSelect(var x: Float, var y: Float, var size: Float = 40f) {
         }
     }
 
+    //sets the given piece as already used, and moves the selectedPiece to the next available one
     fun setPieceUsed(piece: PieceData) {
         usedPieces.add(piece)
 
-        //search for the first unused piece
-        for (p in PieceData.values()) {
-            if (!usedPieces.contains(p)) {
-                selectedPiece = Piece(p)
-                return
-            }
+        selectedPiece = Piece(getNextAvailablePiece(piece))
+    }
+
+    private fun getNextAvailablePiece(piece: PieceData): PieceData {
+        var nextPieceIndex = PieceData.values().indexOf(piece) + 1
+        if (nextPieceIndex == PieceData.values().size) nextPieceIndex = 0
+
+        while (usedPieces.contains(PieceData.values()[nextPieceIndex])) {
+            nextPieceIndex++
+            if (nextPieceIndex == PieceData.values().size)
+                nextPieceIndex = 0
         }
+
+        return PieceData.values()[nextPieceIndex]
+    }
+
+    private fun firstAvailablePiece(): PieceData =
+            PieceData.values().filter { !usedPieces.contains(it) }.first()
+
+    fun highlightNext() {
+        selectedPiece = Piece(getNextAvailablePiece(selectedPiece.data))
     }
 }

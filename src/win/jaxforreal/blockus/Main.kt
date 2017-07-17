@@ -26,7 +26,7 @@ class Main : ScreenManagerApplet() {
     override fun setup() {
         surface.setTitle("Blockus")
         surface.setResizable(true)
-        currentScreen = MainMenuScreen()
+        currentScreen = MainMenuScreen(this)
 
         for (block in PieceData.values()) {
             println(Piece(block))

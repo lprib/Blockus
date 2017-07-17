@@ -41,7 +41,22 @@ fun PApplet.doButton(
 fun PApplet.doTransparentButton(x: Float, y: Float, w: Float, h: Float): Boolean =
         doButton(x, y, w, h, "", color(white.rgb, 0), color(white.rgb, 50), color(white.rgb, 128))
 
-//fun PApplet.doTextInput(x: Float, y: Float, w: Float, h: Float, text: String)
+fun PApplet.doNumberSelect(
+        x: Float,
+        y: Float,
+        w: Float,
+        h: Float,
+        number: Int,
+        range: IntRange = IntRange.EMPTY,
+        updatesSinceLastPress: Int
+): Pair<Int, Int> {
+    text(number, x, y + h)
+    if (updatesSinceLastPress > 20) {
+        if (doButton(x + w / 2, y, w / 2, h / 2, "+")) return Pair(number + 1, 0)
+        if (doButton(x + w / 2, y + h / 2, w / 2, h / 2, "-")) return Pair(number - 1, 0)
+    }
+    return Pair(number, updatesSinceLastPress + 1)
+}
 
 //TODO move to another file, this is not just used for UI
 fun isWithinRect(x: Float, y: Float, w: Float, h: Float, testX: Float, testY: Float): Boolean {

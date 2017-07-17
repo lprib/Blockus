@@ -19,12 +19,18 @@ class Board(
 
     //checks if the piece can be placed at the cell coordinates by player
     fun canPlacePiece(cellX: Int, cellY: Int, piece: Piece, player: Player): Boolean {
+        //isDiagonalToSelf will accumulate for each square of the piece
+        //this means if any square of the piece is diagonal to self, the piece will be valid
+        var isDiagonalToSelf = false
+
         for ((coordX, coordY) in piece.coords) {
             if (!isCellAvailable(cellX + coordX, cellY + coordY, player))
                 return false
+            if (isCellDiagonalToPlayer(cellX + coordX, cellY + coordY, player)) isDiagonalToSelf = true
         }
-        return true
+        return isDiagonalToSelf
     }
+
 
     //places piece, regardless of the legality of the move
     fun placePiece(cellX: Int, cellY: Int, piece: Piece, player: Player) {
@@ -37,6 +43,19 @@ class Board(
     //(is within bounds, isn't taken by another player, isn't touching the players own cells)
     private fun isCellAvailable(x: Int, y: Int, player: Player): Boolean {
         return isCellWithinBounds(x, y) && !cells[x][y].player.isPresent && !isTouchingPlayer(x, y, player)
+    }
+
+    //checks whether the cell is diagonal to specified player
+    private fun isCellDiagonalToPlayer(x: Int, y: Int, player: Player): Boolean {
+        return testOccupiedAndBounds(x + 1, y + 1, player) ||
+                testOccupiedAndBounds(x - 1, y + 1, player) ||
+                testOccupiedAndBounds(x + 1, y - 1, player) ||
+                testOccupiedAndBounds(x - 1, y - 1, player) ||
+        //corners return true (for starting locations)
+                (x == 0 && y == 0) ||
+                (x == 0 && y == heightCells - 1) ||
+                (x == widthCells - 1 && y == 0) ||
+                (x == widthCells - 1 && y == heightCells - 1)
     }
 
     //checks whether the cell at (cellX, cellY) is within bounds of map
@@ -64,7 +83,7 @@ class Board(
 
     //get the cell under the screen location
     //may be optional.empty if not on map
-    fun sceenToCellCoords(x: Float, y: Float): Optional<Pair<Int, Int>> {
+    fun screenToCellCoords(x: Float, y: Float): Optional<Pair<Int, Int>> {
         if (isWithinBoard(x, y)) {
             return Optional.of(Pair(
                     Math.floor((x - drawX) / cellWidth.toDouble()).toInt(),
